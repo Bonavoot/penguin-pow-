@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-const TICK_RATE = 50;
+const TICK_RATE = 45;
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -21,6 +21,8 @@ for (let i = 0; i < 1000; i++) {
     id: null,
     x: 0,
     y: 0,
+    facingRight: 1,
+    jumping: false,
   });
 }
 
@@ -31,16 +33,26 @@ function tick(delta) {
     const player = players[i];
     const input = inputs[player.id];
 
-    if (input.ArrowUp) {
-      player.y += delta;
-    } else if (input.ArrowDown) {
-      player.y -= delta;
+    if (input.ArrowUp && !player.jumping) {
+      player.jumping = true;
+      player.yVelocity = 35;
     }
 
-    if (input.ArrowLeft) {
-      player.x -= delta;
-    } else if (input.ArrowRight) {
-      player.x += delta;
+    if (player.jumping) {
+      player.yVelocity -= 1;
+      player.y += player.yVelocity;
+      if (player.y < 0) {
+        player.y = 0;
+        player.jumping = false;
+      }
+    } else {
+      if (input.ArrowLeft) {
+        player.x -= delta;
+        player.facingRight = -1;
+      } else if (input.ArrowRight) {
+        player.x += delta;
+        player.facingRight = 1;
+      }
     }
   }
   io.emit("players", players);
@@ -59,13 +71,17 @@ io.on("connection", (socket) => {
   if (!player) {
     player = {
       id: socket.id,
+      facingRight: 1,
       x: 0,
       y: 0,
+      jumping: false,
     };
   } else {
     player.id = socket.id;
     player.x = 0;
     player.y = 0;
+    player.facingRight = 1;
+    player.jumping = false;
   }
   players.push(player);
 
@@ -82,7 +98,7 @@ io.on("connection", (socket) => {
 });
 
 const intervalId = setInterval(() => {
-  tick(50 / TICK_RATE);
+  tick(950 / TICK_RATE);
 }, 1000 / TICK_RATE);
 
 server.listen(3001, () => {

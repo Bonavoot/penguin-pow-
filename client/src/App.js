@@ -1,7 +1,8 @@
 import './App.css';
 import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
-import pengu from './assets/pengu.png';
+import standing from './assets/Standing.GIF';
+import map from './assets/map.png';
 
 const socket = io('http://localhost:3001');
 
@@ -13,7 +14,6 @@ function App() {
     ArrowRight: false,
   });
   const [players, setPlayers] = useState([]);
-
   const keysPressed = useRef({});
 
   useEffect(() => {
@@ -28,16 +28,14 @@ function App() {
 
       const { ArrowLeft, ArrowRight, ArrowUp } = keysPressed.current;
 
-      if (ArrowUp && ArrowLeft) {
-        setInputs({ ArrowUp: true, ArrowDown: false, ArrowLeft: true, ArrowRight: false });
-      } else if (ArrowUp && ArrowRight) {
-        setInputs({ ArrowUp: true, ArrowDown: false, ArrowLeft: false, ArrowRight: true });
+      if (ArrowUp && !inputs.ArrowUp) {
+        setInputs({ ArrowUp: true, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, });
+      } else if (ArrowUp && inputs.ArrowUp) {
+        setInputs({ ArrowUp: inputs.ArrowUp, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, });
       } else if (ArrowLeft) {
-        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: true, ArrowRight: false });
+        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: true, ArrowRight: false, });
       } else if (ArrowRight) {
-        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: true });
-      } else if (ArrowUp) {
-        setInputs({ ArrowUp: true, ArrowDown: false, ArrowLeft: false, ArrowRight: false });
+        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: true,  });
       }
     };
 
@@ -61,7 +59,7 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
+  }, [inputs]);
 
   useEffect(() => {
     socket.emit('inputs', inputs);
@@ -75,14 +73,21 @@ function App() {
 
   return (
     <div className="App">
-      {players.map((player) => {
+      <img className='map' src={map} alt="map" />
+      {players.map((player, i) => {
         return (
+          i > 0 ?
           <img
             key={player.id}
-            style={{ position: 'absolute', left: player.x, bottom: player.y }}
-            src={pengu}
-            alt="pengu"
-          />
+            style={{ position: 'absolute', left: player.x + 800, bottom: player.y,  transition: `left .3s ease-out, bottom 1s ease-out`, width: "255px", transform: `scaleX(${player.facingRight})`}}
+            src={standing}
+            alt="standing"
+          /> : <img
+          key={player.id}
+          style={{ position: 'absolute', left: player.x, bottom: player.y, width: "255px", transform: `scaleX(${player.facingRight})`, transition: `left 1s ease-out, bottom 1s ease-out`}}
+          src={standing}
+          alt="standing"
+        />
         );
       })}
     </div>
