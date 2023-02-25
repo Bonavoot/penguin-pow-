@@ -40,7 +40,7 @@ function tick(delta) {
     // velocity determines how far penguin will jump depending on current speed
     if (input.ArrowUp && !player.jumping) {
       player.jumping = true;
-      player.yVelocity = 35;
+      player.yVelocity = 25;
     }
 
     if (player.jumping) {
