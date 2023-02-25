@@ -2,7 +2,9 @@ import './App.css';
 import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import standing from './assets/Standing.GIF';
+import jumping from './assets/jumping.GIF'
 import map from './assets/map.png';
+
 
 const socket = io('http://localhost:3001');
 
@@ -75,17 +77,18 @@ function App() {
     <div className="App">
       <img className='map' src={map} alt="map" />
       {players.map((player, i) => {
+        console.log(player.y)
         return (
           i > 0 ?
           <img
             key={player.id}
             style={{ position: 'absolute', left: player.x + 800, bottom: player.y,  transition: `left .3s ease-out, bottom 1s ease-out`, width: "255px", transform: `scaleX(${player.facingRight})`}}
-            src={standing}
+            src={player.y > 0 ? jumping : standing }
             alt="standing"
           /> : <img
           key={player.id}
           style={{ position: 'absolute', left: player.x, bottom: player.y, width: "255px", transform: `scaleX(${player.facingRight})`, transition: `left 1s ease-out, bottom 1s ease-out`}}
-          src={standing}
+          src={player.y > 0 ? jumping : standing}
           alt="standing"
         />
         );
