@@ -14,6 +14,7 @@ const io = new Server(server, {
   },
 });
 
+// the values the frontend uses to set each player and use the backend info to change the state of their inputs
 const inputs = {};
 const pool = [];
 for (let i = 0; i < 1000; i++) {
@@ -28,11 +29,15 @@ for (let i = 0; i < 1000; i++) {
 
 let players = [];
 
+// this tick function is being run in a setInterval function to allow smoother framerate transitions on different hardware capabilities
 function tick(delta) {
   for (let i = 0; i < players.length; i++) {
     const player = players[i];
     const input = inputs[player.id];
 
+    // this handles the jump input y axis, and the left/right movement input on the x axis 
+    // if statements allow players to move left/right while jumping
+    // velocity determines how far penguin will jump depending on current speed
     if (input.ArrowUp && !player.jumping) {
       player.jumping = true;
       player.yVelocity = 35;
@@ -45,18 +50,32 @@ function tick(delta) {
         player.y = 0;
         player.jumping = false;
       }
-    } else {
-      if (input.ArrowLeft) {
-        player.x -= delta;
-        player.facingRight = -1;
-      } else if (input.ArrowRight) {
-        player.x += delta;
-        player.facingRight = 1;
-      }
     }
+
+    if (input.ArrowLeft) {
+      player.x -= delta;
+      player.facingRight = -1;
+    } else if (input.ArrowRight) {
+      player.x += delta;
+      player.facingRight = 1;
+    }
+
+        // checks if player is outside of map boundry
+        if (player.x < 0) {
+          player.x = 0;
+        } else if (player.x > 1535) {
+          player.x = 1535;
+        }
+        if (player.y < 0) {
+          player.y = 0;
+        } else if (player.y > 1030) {
+          player.y = 1030;
+        }
+      }
+      io.emit("players", players);
   }
-  io.emit("players", players);
-}
+  
+
 
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
@@ -72,7 +91,7 @@ io.on("connection", (socket) => {
     player = {
       id: socket.id,
       facingRight: 1,
-      x: 0,
+      x: 800,
       y: 0,
       jumping: false,
     };

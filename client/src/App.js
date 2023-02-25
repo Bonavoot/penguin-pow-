@@ -77,12 +77,13 @@ function App() {
     <div className="App">
       <img className='map' src={map} alt="map" />
       {players.map((player, i) => {
-        console.log(player.y)
+        console.log("y " + player.y)
+        console.log("x " + player.x)
         return (
           i > 0 ?
           <img
             key={player.id}
-            style={{ position: 'absolute', left: player.x + 800, bottom: player.y,  transition: `left .3s ease-out, bottom 1s ease-out`, width: "255px", transform: `scaleX(${player.facingRight})`}}
+            style={{ position: 'absolute', left: player.x, bottom: player.y,  transition: `left .3s ease-out, bottom 1s ease-out`, width: "255px", transform: `scaleX(${player.facingRight})`}}
             src={player.y > 0 ? jumping : standing }
             alt="standing"
           /> : <img
