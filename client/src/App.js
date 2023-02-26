@@ -5,7 +5,6 @@ import standing from './assets/Standing.GIF';
 import jumping from './assets/jump.gif'
 import map from './assets/map.png';
 
-
 const socket = io('http://localhost:3001');
 
 function App() {
@@ -77,21 +76,14 @@ function App() {
     <div className="App">
       <img className='map' src={map} alt="map" />
       {players.map((player, i) => {
-        console.log("y " + player.y)
-        console.log("x " + player.x)
         return (
-          i > 0 ?
           <img
+          className='players'
             key={player.id}
-            style={{ position: 'absolute', left: player.x, bottom: player.y, width: "255px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}
+            style={{ position: 'absolute', left: player.x, bottom: player.y, width: "175px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}
             src={player.y > 0 ? jumping : standing }
             alt="standing"
-          /> : <img
-          key={player.id}
-          style={{ position: 'absolute', left: player.x, bottom: player.y, width: "255px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}
-          src={player.y > 0 ? jumping : standing}
-          alt="standing"
-        />
+          /> 
         );
       })}
     </div>
@@ -99,3 +91,5 @@ function App() {
 }
 
 export default App;
+
+

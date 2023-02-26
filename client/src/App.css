@@ -2,21 +2,35 @@ html, body {
   overflow: hidden;
   margin: 0;
   padding: 0;
-
+  height: 100vh;
+  width: 100vw;
 }
 
+html {
+  background-color: rgb(25, 25, 30);
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .App {
-height: 100%;
-width: 100%;
+height: fit-content;
+width: fit-content;
 display: flex;
 justify-content: center;
 align-items: center;
-
+position: relative;
+overflow: hidden;
+border: 4px solid rgb(0, 0, 0);
 }
 
 .map {
-height: 100vh;
-width: 100vw;
-
+width: 1200px;
+overflow: hidden;
 }
+
