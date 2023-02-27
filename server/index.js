@@ -22,13 +22,17 @@ for (let i = 0; i < 1000; i++) {
     id: null,
     x: 0,
     y: 0,
+    attackCooldown: 0,
     facingRight: 1,
     jumping: false,
+    attacking: false,
+    hp: 3,
   });
 }
 
 let players = [];
 let isSecondPlayerJoined = false;
+
 
 // this tick function is being run in a setInterval function to allow smoother framerate transitions on different hardware capabilities
 function tick(delta) {
@@ -62,6 +66,42 @@ function tick(delta) {
       }
     }
 
+
+    if(input.Space && !player.attacking){
+      player.attacking = true
+      player.attackCooldown = 40
+
+         // handle attack hit detection
+      for (let j = 0; j < players.length; j++) {
+        const otherPlayer = players[j];
+      
+        if (otherPlayer.id !== player.id && Math.abs(player.x - otherPlayer.x) < 200) {
+          // players are close enough to hit each other
+          console.log("hit")
+          if (player.facingRight === 1 && otherPlayer.x > player.x || player.facingRight === -1 && otherPlayer.x < player.x) {
+            // player is facing the other player
+            console.log("hit")
+            otherPlayer.hp -= 1; // subtract 10 hit points
+            if (otherPlayer.hp <= 0) {
+              console.log("dead")
+            }
+          }
+        }
+      }   
+    }
+
+    if(player.attacking){
+      //handle collisions here ???
+      player.attackCooldown -= 1
+      if(player.attackCooldown < 0) {
+        player.attackCooldown = 0;
+        player.attacking = false;
+      }
+    }
+
+    
+
+
     if (input.ArrowLeft) {
       player.x -= delta;
       player.facingRight = -1;
@@ -84,6 +124,7 @@ function tick(delta) {
       io.emit("players", players);
   }
 
+
 let numPlayers = 0;
 
 io.on("connection", (socket) => {
@@ -94,6 +135,7 @@ io.on("connection", (socket) => {
       ArrowDown: false,
       ArrowLeft: false,
       ArrowRight: false,
+      Space: false
     };
 
     let player = pool.pop();
@@ -103,14 +145,20 @@ io.on("connection", (socket) => {
         facingRight: 1,
         x: 0,
         y: 0,
+        attackCooldown: 0,
         jumping: false,
+        attacking: false,
+        hp: 3,
       };
     } else {
       player.id = socket.id;
       player.x = 25;
       player.y = 0;
+      player.attackCooldown = 0,
       player.facingRight = 1;
       player.jumping = false;
+      player.attacking = false;
+      player.hp = 3;
     }
     players.push(player);
     numPlayers++;

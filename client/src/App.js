@@ -13,6 +13,7 @@ function App() {
     ArrowDown: false,
     ArrowLeft: false,
     ArrowRight: false,
+    Space: false,
   });
   const [players, setPlayers] = useState([]);
   const keysPressed = useRef({});
@@ -26,30 +27,37 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       keysPressed.current[e.code] = true;
-
-      const { ArrowLeft, ArrowRight, ArrowUp } = keysPressed.current;
+      console.log(e.code)
+      const { ArrowLeft, ArrowRight, ArrowUp, Space } = keysPressed.current;
 
       if (ArrowUp && !inputs.ArrowUp) {
-        setInputs({ ArrowUp: true, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, });
+        setInputs({ ArrowUp: true, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, Space: Space,});
       } else if (ArrowUp && inputs.ArrowUp) {
-        setInputs({ ArrowUp: inputs.ArrowUp, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, });
+        setInputs({ ArrowUp: inputs.ArrowUp, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, Space: Space, });
       } else if (ArrowLeft) {
-        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: true, ArrowRight: false, });
+        console.log(inputs.ArrowLeft)
+        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: true, ArrowRight: false, Space: Space,});
       } else if (ArrowRight) {
-        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: true,  });
+        setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: true, Space: Space,});
+      } else if (Space && !inputs.Space) {
+        setInputs({ ArrowUp: ArrowUp, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, Space: true,  })
+      } else if (Space && inputs.Space) {
+        setInputs(({ ArrowUp: ArrowUp, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, Space: inputs.Space, }))
       }
     };
+
 
     const handleKeyUp = (e) => {
       keysPressed.current[e.code] = false;
 
-      const { ArrowLeft, ArrowRight, ArrowUp } = keysPressed.current;
+      const { ArrowLeft, ArrowRight, ArrowUp, Space } = keysPressed.current;
 
       setInputs({
         ArrowUp: ArrowUp,
         ArrowDown: false,
         ArrowLeft: ArrowLeft,
         ArrowRight: ArrowRight,
+        Space: Space,
       });
     };
 
@@ -70,20 +78,29 @@ function App() {
     socket.on('players', (serverPlayers) => {
       setPlayers(serverPlayers);
     });
+
+
   }, []);
+
+  
 
   return (
     <div className="App">
       <img className='map' src={map} alt="map" />
       {players.map((player, i) => {
         return (
+          <>
+          {player.attacking ? <div className='players' style={{ position: 'absolute', left: player.x, bottom: player.y, width: "175px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}>ATTACK!!!</div> :
           <img
           className='players'
             key={player.id}
             style={{ position: 'absolute', left: player.x, bottom: player.y, width: "175px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}
-            src={player.y > 0 ? jumping : standing }
+            src={player.jumping ? jumping : standing }
             alt="standing"
-          /> 
+          /> }
+          
+          <div className={"hp" + i}>{player.hp}</div> 
+          </>
         );
       })}
     </div>

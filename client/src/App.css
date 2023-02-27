@@ -34,3 +34,19 @@ width: 1200px;
 overflow: hidden;
 }
 
+.players {
+  background-color: red;
+}
+
+.hp0 {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+
+.hp1 {
+  position: absolute;
+  top: 10px;
+  left: 1175px;
+}
