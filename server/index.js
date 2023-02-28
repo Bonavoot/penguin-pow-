@@ -4,6 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
+
 const TICK_RATE = 45;
 
 const server = http.createServer(app);
@@ -26,6 +27,7 @@ for (let i = 0; i < 1000; i++) {
     facingRight: 1,
     jumping: false,
     attacking: false,
+    attackStartTime: null,
     hp: 3,
   });
 }
@@ -66,28 +68,36 @@ function tick(delta) {
       }
     }
 
+    const ATTACK_DURATION = 1000;
 
     if(input.Space && !player.attacking){
       player.attacking = true
-      player.attackCooldown = 40
-
+      player.attackCooldown = 20;
+      player.attackStartTime = Date.now();
+        
          // handle attack hit detection
-      for (let j = 0; j < players.length; j++) {
-        const otherPlayer = players[j];
-      
-        if (otherPlayer.id !== player.id && Math.abs(player.x - otherPlayer.x) < 200) {
-          // players are close enough to hit each other
-          console.log("hit")
-          if (player.facingRight === 1 && otherPlayer.x > player.x || player.facingRight === -1 && otherPlayer.x < player.x) {
-            // player is facing the other player
-            console.log("hit")
-            otherPlayer.hp -= 1; // subtract 10 hit points
-            if (otherPlayer.hp <= 0) {
-              console.log("dead")
+         for (let j = 0; j < players.length; j++) {
+            const otherPlayer = players[j];
+          
+            // calculate distance between players in both x and y axes
+            const distanceX = Math.abs(player.x - otherPlayer.x);
+            const distanceY = Math.abs(player.y - otherPlayer.y);
+            
+            // check if players are close enough to hit each other
+            if (otherPlayer.id !== player.id && distanceX < 180 && distanceY < 180) {
+              if (player.facingRight === 1 && otherPlayer.x > player.x || player.facingRight === -1 && otherPlayer.x < player.x) {
+                // player is facing the other player
+                if (player.attackStartTime + player.attackCooldown > Date.now()) {
+                    console.log("hit");
+                    otherPlayer.hp -= 1; // subtract 1 hit point
+                    if (otherPlayer.hp <= 0) {
+                      console.log("dead");
+                    }
+                  }
+              }
             }
           }
-        }
-      }   
+          
     }
 
     if(player.attacking){
@@ -98,9 +108,6 @@ function tick(delta) {
         player.attacking = false;
       }
     }
-
-    
-
 
     if (input.ArrowLeft) {
       player.x -= delta;
@@ -149,6 +156,7 @@ io.on("connection", (socket) => {
         jumping: false,
         attacking: false,
         hp: 3,
+        attackStartTime: null,
       };
     } else {
       player.id = socket.id;
@@ -159,6 +167,7 @@ io.on("connection", (socket) => {
       player.jumping = false;
       player.attacking = false;
       player.hp = 3;
+      player.attackStartTime = null;
     }
     players.push(player);
     numPlayers++;

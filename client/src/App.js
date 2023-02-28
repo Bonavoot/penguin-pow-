@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import standing from './assets/Standing.GIF';
 import jumping from './assets/jump.gif'
 import map from './assets/map.png';
+import attack from './assets/attack.gif'
 
 const socket = io('http://localhost:3001');
 
@@ -90,7 +91,13 @@ function App() {
       {players.map((player, i) => {
         return (
           <>
-          {player.attacking ? <div className='players' style={{ position: 'absolute', left: player.x, bottom: player.y, width: "175px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}>ATTACK!!!</div> :
+          {player.attacking ? <img
+          className='players'
+            key={player.id}
+            style={{ position: 'absolute', left: player.x, bottom: player.y, width: "285px", transform: `scaleX(${player.facingRight})`, transition: `left .45s ease-out`}}
+            src={attack}
+            alt="standing"
+          />  :
           <img
           className='players'
             key={player.id}
