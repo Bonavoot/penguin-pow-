@@ -1,3 +1,7 @@
+:root {
+  --hp-color: rgb(66, 214, 66);
+}
+
 html, body {
   overflow: hidden;
   margin: 0;
@@ -35,18 +39,52 @@ overflow: hidden;
 }
 
 .players {
- 
+  
 }
 
-.hp1 {
+.timer {
+  font-family: 'Josefin Sans', sans-serif;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 50px;
+  font-size: 54pt;
+  color: rgb(0, 0, 0);
 }
 
+#player-name-hp0,  #player-name-hp1{
+  font-family: "Bungee Outline", cursive;
+  color: blue;
+}
+
+.hp-container0{
+  position: absolute;
+  z-index: relative;
+  top: 50px;
+  left: 120px;
+  height: 50px;
+  width: 300px;
+  border: solid 2px black;
+}
 
 .hp0 {
   position: absolute;
-  top: 10px;
-  left: 1175px;
+  background-color: var(--hp-color);
+  height: 50px;
+  transition: width 1s ease-out;
+  z-index: 99;
 }
+
+.hp-container1{
+  position: absolute;
+  top: 50px;
+  left: 780px;
+  height: 50px;
+  width: 300px;
+  border: solid 2px black;
+}
+
+.hp1 {
+  background-color: var(--hp-color);
+  height: 50px;
+  transition: width 1s ease-out;
+}
+
