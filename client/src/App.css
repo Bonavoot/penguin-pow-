@@ -33,9 +33,18 @@ overflow: hidden;
 border: 4px solid rgb(0, 0, 0);
 }
 
+
+
 .map {
 width: 1200px;
 overflow: hidden;
+}
+
+.countdown {
+  position: absolute;
+  left: 21%;
+  top: 40%;
+  width: 700px;
 }
 
 .players {
@@ -52,7 +61,7 @@ overflow: hidden;
 
 #player-name-hp0,  #player-name-hp1{
   font-family: "Bungee Outline", cursive;
-  color: blue;
+  color: rgb(255, 255, 255);
 }
 
 .hp-container0{
