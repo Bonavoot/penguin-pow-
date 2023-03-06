@@ -70,10 +70,11 @@ const Player = ({index, player }) => {
         
     return(<>
       {renderAnimationImg(player)}
+      <div className='wins' style={{position: "absolute", top: "10px", left: index === 0 ? "15px" : "1115px"}}  >WINS - {player.wins}</div>
       <div className={'hp-container' + index}>
       <h2 id={"player-name-hp" + index} 
         style={{position: "absolute", 
-        top: "-50px", 
+        top: "-70px", 
         left: index === 0 ? "10px" : "170px"}}>
       {"Player " + (index + 1)}
       </h2>

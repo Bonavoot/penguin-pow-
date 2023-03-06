@@ -97,3 +97,8 @@ overflow: hidden;
   transition: width 1s ease-out;
 }
 
+.wins {
+  color: black;
+  font-weight: 700;
+  font-family: 'Josefin Sans', sans-serif;
+}

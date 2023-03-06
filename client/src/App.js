@@ -22,7 +22,6 @@ function App() {
   const [timer, setTimer] = useState(99)
   const keysPressed = useRef({});
 
-
   useEffect(() => {
       const handleKeyDown = (e) => {
       keysPressed.current[e.code] = true;
@@ -70,6 +69,11 @@ function App() {
   }, [inputs]);
 
   useEffect(() => {
+    socket.emit('inputs', inputs);
+  }, [inputs])
+
+
+  useEffect(() => {
     socket.on('players', (serverPlayers) => {
       setPlayers(serverPlayers);
     });
@@ -87,54 +91,24 @@ function App() {
   }, [])
 
   useEffect(() => {
-
       socket.on('timer', (time) => {
           if(time <= 0){
-          setTimer(99)
+          setTimer(0)
         } else {
           setTimer(time)
       }
       });
-
       return () => {
         socket.off('timer')
       }
   }, [])
 
-  useEffect(() => {
-    socket.emit('inputs', inputs);
-  }, [inputs])
-
-  const restartGameState = () => {
-    setTimer(99);
-
-    const updatedPlayers = players.map((player) => {
-      player.x = player.id === players[0].id ? 25 : 1000;
-      player.y = 65;
-      player.attackCooldown = 0;
-      player.facingRight = player.id === players[0].id ? 1 : -1;
-      player.jumping = false;
-      player.diving = false;
-      player.taunt = false;
-      player.attacking = false;
-      player.hp = 100;
-      return player;
-    });
-
-    console.log(updatedPlayers)
-    socket.emit("restartGameState", socket, updatedPlayers);
-  };
-
-      
-      
     // console.log("--RESTARTED BUTTON-- " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
     // console.log("LIVE-- players: " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
   return (
     <div className="App">
       <img className='map' src={map} alt="map" />
       {timer !== 0 ? <div className='timer'>{timer}</div> : <div className='timer'>0</div>}
-      {<button onClick={restartGameState} className="rematch" >Rematch</button>}
-      
       {players.map((player, i) => {
       return <Player key={"player" + i} player={player} index={i}  />
       })}
