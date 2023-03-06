@@ -67,15 +67,17 @@ const Player = ({index, player }) => {
           />
           }
         }
+
+        
         
     return(<>
       {renderAnimationImg(player)}
-      <div className='wins' style={{position: "absolute", top: "10px", left: index === 0 ? "15px" : "1115px"}}  >WINS - {player.wins}</div>
       <div className={'hp-container' + index}>
+      <div className='wins' style={{position: "absolute", top: "-20px", left: index === 0 ? "220px" : "190px"}}  >WINS - {player.wins}</div>
       <h2 id={"player-name-hp" + index} 
         style={{position: "absolute", 
-        top: "-70px", 
-        left: index === 0 ? "7px" : "173px"}}>
+        top: "-50px", 
+        left: index === 0 ? "7px" : "370px"}}>
       {"Player " + (index + 1)}
       </h2>
       <div className={"hp" + index} style={{width: player.hp + '%'}}></div> 

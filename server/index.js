@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-const TICK_RATE = 45;
+const TICK_RATE = 50;
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -122,11 +122,20 @@ function tick(delta) {
               }
               // set score and winner on hit 
               if(player.hp <= 0){
+               
                 otherPlayer.wins += 1
                 players[0].x = 870;
-                players[1].x = 150;
+                players[0].y = 65;
                 players[0].facingRight = -1;
+                
+                players[1].x = 150;
+                players[1].y = 65;
                 players[1].facingRight = 1;
+
+                io.emit("players", players)
+
+                otherPlayer.hp = 100;
+                player.hp = 100;
                 // reset players
                 if(players[0].hp === 0){
                   winner = "PLAYER 2 WINS"
@@ -135,8 +144,6 @@ function tick(delta) {
                   winner = "PLAYER 1 WINS"
                   io.emit("winner", winner)
                 }
-                player.hp = 100;
-                otherPlayer.hp = 100;
                 time = 108
               }  
 
@@ -314,5 +321,4 @@ function tick(delta) {
     server.listen(3001, "0.0.0.0", () => {
     console.log("Server listening on port 3001");
     });
-
 

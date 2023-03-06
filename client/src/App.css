@@ -38,27 +38,12 @@ width: 1200px;
 overflow: hidden;
 }
 
-.victory-or-walrus {
-  position: absolute;
-  top: 26%;
-  left: 22%;
-  height: 350px;
-  font-size: 45pt;
-  font-family: 'Bungee Inline', cursive;
-}
 
-.victory {
-  color: rgb(0, 41, 0);
-}
-
-.walrus {
-  color: rgb(71, 35, 71);
-}
 
 .timer {
   font-family: 'Josefin Sans', sans-serif;
   position: absolute;
-  top: 65px;
+  top: 32px;
   font-size: 54pt;
   font-weight: 700;
   border-radius: 50%;
@@ -72,81 +57,93 @@ overflow: hidden;
 
 .hp-container0{
   position: absolute;
-  z-index: relative;
-  top: 65px;
-  left: 100px;
-  height: 50px;
-  width: 300px;
+  top: 40px;
+  left: 40px;
+  height: 40px;
+  width: 500px;
   border: solid 2px black;
-}
+}   
 
 .hp0 {
   position: absolute;
   background-color: var(--hp-color);
-  height: 50px;
-  transition: width 1s ease-out;
+  height: 40px;
+  transition: width .5s ease-out;
   z-index: 99;
 }
 
 .hp-container1{
   position: absolute;
-  top: 65px;
-  left: 800px;
-  height: 50px;
-  width: 300px;
+  top: 40px;
+  left: 655px;
+  height: 40px;
+  width: 500px;
   border: solid 2px black;
 }
 
 .hp1 {
   background-color: var(--hp-color);
-  height: 50px;
-  transition: width 1s ease-out;
+  height: 40px;
+  transition: width .5s ease-out;
 }
-
-.winner {
-  position: absolute;
-  top: 14%;
-  left: 41%;
-  font-size: 74pt;
-  font-family: 'Bungee Inline', cursive;
-  animation: winner 2s ease forwards;
-}
-
-
-@keyframes winner {
-  0% {
-    color: black;
-    transform: scale(0);
-    opacity: 0;
-    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  }
-  25% {
-    color: red;
-    transform: scale(2);
-    opacity: 1;
-    text-shadow: 3px 10px 5px rgba(0, 0, 0, 0.5);
-  }
-  50% {
-    color: red;
-    transform: scale(1);
-    opacity: 1;
-    text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
-  }
-  100% {
-    /* animate nothing to add pause at the end of animation */
-    transform: scale(1);
-    opacity: 1;
-    text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
-  }
-}
-
 
 .wins {
   color: black;
   font-weight: 700;
   font-family: 'Josefin Sans', sans-serif;
-  
 }
+
+.victory-or-walrus {
+  position: absolute;
+  color: white;
+  top: 34%;
+  left: 22%;
+  height: 350px;
+  font-size: 45pt;
+  font-family: 'Bungee Inline', cursive;
+}
+
+.victory {
+  color: var(--hp-color);
+}
+
+.walrus {
+  color: rgb(171, 48, 171);
+}
+
+.winner {
+  position: absolute;
+  top: 28%;
+  left: 41%;
+  font-size: 68pt;
+  font-family: 'Bungee Inline', cursive;
+  animation: winner 2s ease forwards;
+}
+
+@keyframes winner {
+  0% {
+    color: rgb(255, 0, 0);
+    transform: scale(1);
+    opacity: 0;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    color: red;
+    transform: scale(3);
+    opacity: 1;
+    text-shadow: 3px 10px 5px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    /* animate nothing to add pause at the end of animation */
+    transform: scale(0);
+    opacity: 1;
+    color: white;
+    text-shadow: 1px 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+
+
 
 
 

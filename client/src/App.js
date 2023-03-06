@@ -1,11 +1,8 @@
 import './App.css';
 import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
-import map from './assets/map.png';
+import map from './assets/map.gif';
 import Player from "./Player"
-
-//import youLose from './assets/youLose'
-// import youWin from './assets/youWin'
 
 const socket = io('http://localhost:3001');
 
@@ -121,10 +118,8 @@ function App() {
     })
   }, [])
 
+  console.log(players)
 
-
-    // console.log("--RESTARTED BUTTON-- " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
-    // console.log("LIVE-- players: " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
   return (
     <div className="App">
       <img className='map' src={map} alt="map" />
@@ -140,7 +135,11 @@ function App() {
 
 export default App;
 
-// <img src={victoryOrWalrus} alt="countdown" className='countdown' /> 
-// <img className="ko" src={winner} alt="ko" /> 
-// have the K.O run in a setTimeout, then change the img src
-// to the Player _ wins!
+
+
+/*
+When winner is set
+run K.O ! for 2 seconds 
+When thats done
+run ___ wins!
+*/
