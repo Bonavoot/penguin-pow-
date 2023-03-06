@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import map from './assets/map.png';
 import Player from "./Player"
-import victoryOrWalrusGif from './assets/victoryOrWalrus.gif'
+
 //import youLose from './assets/youLose'
 // import youWin from './assets/youWin'
 
@@ -21,6 +21,7 @@ function App() {
   const [players, setPlayers] = useState([]);
   const [timer, setTimer] = useState(99)
   const [victoryOrWalrus, setVictoryOrWalrus] = useState(null)
+  const [winner, setWinner] = useState("")
   const keysPressed = useRef({});
 
   useEffect(() => {
@@ -34,7 +35,6 @@ function App() {
       } else if (ArrowUp && inputs.ArrowUp) {
         setInputs({ ArrowUp: inputs.ArrowUp, ArrowDown: false, ArrowLeft: ArrowLeft, ArrowRight: ArrowRight, Space: Space, });
       } else if (ArrowLeft) {
-        console.log(inputs.ArrowLeft)
         setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: true, ArrowRight: false, Space: Space,});
       } else if (ArrowRight) {
         setInputs({ ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: true, Space: Space,});
@@ -70,15 +70,15 @@ function App() {
   }, [inputs]);
 
   useEffect(() => {
-    if(!victoryOrWalrus){
+    if(!victoryOrWalrus && !winner){
       socket.emit('inputs', inputs);
     }
     
-  }, [inputs, victoryOrWalrus])
+  }, [inputs, victoryOrWalrus, winner])
 
 
   useEffect(() => {
-    if(!victoryOrWalrus){
+    if(!victoryOrWalrus && !winner){
       socket.on('players', (serverPlayers) => {
         setPlayers(serverPlayers);
       });
@@ -87,7 +87,7 @@ function App() {
     return () => {
       socket.off("players")
     }
-  }, [players, victoryOrWalrus])
+  }, [players, victoryOrWalrus, winner])
 
 
   useEffect(() => {
@@ -107,7 +107,7 @@ function App() {
       return () => {
         socket.off('timer')
       }
-  }, [])
+  }, [])  
 
   useEffect(() => {
     socket.on("victoryOrWalrus", (victoryOrWalrusBool) => {
@@ -115,13 +115,22 @@ function App() {
     })
   }, [])
 
+  useEffect(() => {
+    socket.on("winner", (winner) => {
+      setWinner(winner)
+    })
+  }, [])
+
+
+
     // console.log("--RESTARTED BUTTON-- " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
     // console.log("LIVE-- players: " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
   return (
     <div className="App">
       <img className='map' src={map} alt="map" />
       {timer < 100 ? <div className='timer'>{timer}</div> : <div className='timer'>99</div> }
-      {victoryOrWalrus ? <img className='victoryOrWalrus' src={victoryOrWalrusGif} alt="victoryOrWalrus" /> : null} 
+      {winner ? <h2 className='winner'>K.O!</h2> : null}
+      {victoryOrWalrus ? <h1 className='victory-or-walrus'><span className='victory'>VICTORY </span>OR<span className='walrus'> WALRUS</span></h1> : null} 
       {players.map((player, i) => {
       return <Player key={"player" + i} player={player} index={i}  />
       })}

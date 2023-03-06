@@ -16,9 +16,10 @@ const io = new Server(server, {
 
 let players = [];
 let inputsMap = {};
-let time = 103;
+let time = 104;
 let isSecondPlayerJoined = false;
 let victoryOrWalrusBool = true;
+let winner = null;
 
 let pool = [];
 for (let i = 0; i < 100; i++) {
@@ -119,48 +120,58 @@ function tick(delta) {
                         otherPlayer.x -= 350
                     }
               }
-
+              // set score and winner on hit 
               if(player.hp <= 0){
                 otherPlayer.wins += 1
-                // reset players
-                player.hp = 100;
-                
-                otherPlayer.hp = 100;
-                
                 players[0].x = 870;
-                players[0].facingRight = -1;
                 players[1].x = 150;
+                players[0].facingRight = -1;
                 players[1].facingRight = 1;
-                console.log(players)
-                time = 103
+                // reset players
+                if(players[0].hp === 0){
+                  winner = "PLAYER 2 WINS"
+                  io.emit("winner", winner)
+                } else {
+                  winner = "PLAYER 1 WINS"
+                  io.emit("winner", winner)
+                }
+                player.hp = 100;
+                otherPlayer.hp = 100;
+                time = 108
               }  
+
+
               }
             }
           }  
-          
+          // set score and winner on time
           if(time <= 0) {
             if(players[0].hp > players[1].hp) {
+              winner = "PLAYER 1 WINS!"
+
               players[0].wins += 1
               players[0].hp = 100;
               players[0].x = 870;
               players[0].facingRight = -1;
-              
+             
               players[1].hp = 100;
               players[1].x = 150;
               players[1].facingRight = 1;
 
-              time = 103 
+              time = 108
             } else {
+              winner = "PLAYER 2 WINS!"
+
               players[1].wins += 1
               players[1].hp = 100;
               players[1].x = 150;
               players[1].facingRight = 1;
-
+              //io.emit("winner", "player1")
               players[0].x = 870;
               players[0].facingRight = -1;
               players[0].hp = 100;
 
-              time = 103 
+              time = 108
             }
           }
 
@@ -212,8 +223,15 @@ function tick(delta) {
    
     setInterval(() => {
         time -= 1;
-        if(time > 99){
+        if(time > 105){
+          io.emit("winner", winner)
+        }
+
+        if(time >= 99 && time < 105){
+          winner = null
+          io.emit("winner", winner)
           victoryOrWalrusBool = true;
+         // io.emit("winner", false)
           io.emit("victoryOrWalrus", victoryOrWalrusBool)
           // prevent players from moving during start animation
         }
@@ -223,15 +241,9 @@ function tick(delta) {
           io.emit("victoryOrWalrus", victoryOrWalrusBool)
         }
 
-     
-
-        if(time <= 0){
-            time = 0;
-            }
         io.emit("timer", time)
     }, 1000)
 
-    
     io.on("connect", (socket) => {
     
     if (numPlayers < 2) {
@@ -244,8 +256,6 @@ function tick(delta) {
       Space: false
     };
   
-
-
     socket.on("inputs", (data) => {
       inputsMap[socket.id] = data;
   });
