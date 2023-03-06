@@ -16,9 +16,9 @@ const io = new Server(server, {
 
 let players = [];
 let inputsMap = {};
-let time = 99;
+let time = 103;
 let isSecondPlayerJoined = false;
-
+let victoryOrWalrusBool = true;
 
 let pool = [];
 for (let i = 0; i < 100; i++) {
@@ -50,7 +50,7 @@ function tick(delta) {
     // Makes sure player 2 starts on far right side
      if(players.length === 2) {
         if(!isSecondPlayerJoined) {
-          player.x = 870;
+          player.x = 930;
           player.facingRight = -1
           isSecondPlayerJoined = true;
         }
@@ -124,13 +124,15 @@ function tick(delta) {
                 otherPlayer.wins += 1
                 // reset players
                 player.hp = 100;
+                
                 otherPlayer.hp = 100;
+                
                 players[0].x = 870;
                 players[0].facingRight = -1;
                 players[1].x = 150;
                 players[1].facingRight = 1;
                 console.log(players)
-                time = 99
+                time = 103
               }  
               }
             }
@@ -147,7 +149,7 @@ function tick(delta) {
               players[1].x = 150;
               players[1].facingRight = 1;
 
-              time = 99 
+              time = 103 
             } else {
               players[1].wins += 1
               players[1].hp = 100;
@@ -158,7 +160,7 @@ function tick(delta) {
               players[0].facingRight = -1;
               players[0].hp = 100;
 
-              time = 99 
+              time = 103 
             }
           }
 
@@ -202,6 +204,7 @@ function tick(delta) {
           player.y = 1030;
         }
     }
+  
       io.emit("players", players);
     }
 
@@ -209,6 +212,19 @@ function tick(delta) {
    
     setInterval(() => {
         time -= 1;
+        if(time > 99){
+          victoryOrWalrusBool = true;
+          io.emit("victoryOrWalrus", victoryOrWalrusBool)
+          // prevent players from moving during start animation
+        }
+          
+        if(time <= 99) {
+          victoryOrWalrusBool = false;
+          io.emit("victoryOrWalrus", victoryOrWalrusBool)
+        }
+
+     
+
         if(time <= 0){
             time = 0;
             }
@@ -227,6 +243,8 @@ function tick(delta) {
       ArrowRight: false,
       Space: false
     };
+  
+
 
     socket.on("inputs", (data) => {
       inputsMap[socket.id] = data;
@@ -250,7 +268,7 @@ function tick(delta) {
       };
     } else {
       player.id = socket.id;
-      player.x = 150;
+      player.x = 100;
       player.y = 65;
       player.attackCooldown = 0,
       player.facingRight = 1;

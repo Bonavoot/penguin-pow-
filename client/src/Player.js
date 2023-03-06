@@ -75,7 +75,7 @@ const Player = ({index, player }) => {
       <h2 id={"player-name-hp" + index} 
         style={{position: "absolute", 
         top: "-70px", 
-        left: index === 0 ? "10px" : "170px"}}>
+        left: index === 0 ? "7px" : "173px"}}>
       {"Player " + (index + 1)}
       </h2>
       <div className={"hp" + index} style={{width: player.hp + '%'}}></div> 

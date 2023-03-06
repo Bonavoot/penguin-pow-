@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import map from './assets/map.png';
 import Player from "./Player"
-// import victoryOrWalrus from './assets/victoryOrWalrus.gif'
+import victoryOrWalrusGif from './assets/victoryOrWalrus.gif'
 //import youLose from './assets/youLose'
 // import youWin from './assets/youWin'
 
@@ -20,6 +20,7 @@ function App() {
 
   const [players, setPlayers] = useState([]);
   const [timer, setTimer] = useState(99)
+  const [victoryOrWalrus, setVictoryOrWalrus] = useState(null)
   const keysPressed = useRef({});
 
   useEffect(() => {
@@ -69,19 +70,24 @@ function App() {
   }, [inputs]);
 
   useEffect(() => {
-    socket.emit('inputs', inputs);
-  }, [inputs])
+    if(!victoryOrWalrus){
+      socket.emit('inputs', inputs);
+    }
+    
+  }, [inputs, victoryOrWalrus])
 
 
   useEffect(() => {
-    socket.on('players', (serverPlayers) => {
-      setPlayers(serverPlayers);
-    });
+    if(!victoryOrWalrus){
+      socket.on('players', (serverPlayers) => {
+        setPlayers(serverPlayers);
+      });
+    }
    
     return () => {
       socket.off("players")
     }
-  }, [players])
+  }, [players, victoryOrWalrus])
 
 
   useEffect(() => {
@@ -103,12 +109,19 @@ function App() {
       }
   }, [])
 
+  useEffect(() => {
+    socket.on("victoryOrWalrus", (victoryOrWalrusBool) => {
+      setVictoryOrWalrus(victoryOrWalrusBool)
+    })
+  }, [])
+
     // console.log("--RESTARTED BUTTON-- " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
     // console.log("LIVE-- players: " + players + " Gameover: " + gameOver + " winner: " + winner + " timer :" + timer)
   return (
     <div className="App">
       <img className='map' src={map} alt="map" />
-      {timer !== 0 ? <div className='timer'>{timer}</div> : <div className='timer'>0</div>}
+      {timer < 100 ? <div className='timer'>{timer}</div> : <div className='timer'>99</div> }
+      {victoryOrWalrus ? <img className='victoryOrWalrus' src={victoryOrWalrusGif} alt="victoryOrWalrus" /> : null} 
       {players.map((player, i) => {
       return <Player key={"player" + i} player={player} index={i}  />
       })}
