@@ -67,8 +67,6 @@ const Player = ({index, player }) => {
           />
           }
         }
-
-        
         
     return(<>
       {renderAnimationImg(player)}
@@ -77,7 +75,7 @@ const Player = ({index, player }) => {
       <h2 id={"player-name-hp" + index} 
         style={{position: "absolute", 
         top: "-50px", 
-        left: index === 0 ? "7px" : "370px"}}>
+        left: index === 0 ? "10px" : "370px"}}>
       {"Player " + (index + 1)}
       </h2>
       <div className={"hp" + index} style={{width: player.hp + '%'}}></div> 
@@ -87,5 +85,3 @@ const Player = ({index, player }) => {
 }
 
 export default Player
-
-    

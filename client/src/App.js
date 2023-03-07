@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import map from './assets/map.gif';
 import Player from "./Player"
+import AudioPlayer from './AudioPlayer';
 
 const socket = io('http://localhost:3001');
 
@@ -86,7 +87,6 @@ function App() {
     }
   }, [players, victoryOrWalrus, winner])
 
-
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected');
@@ -118,14 +118,13 @@ function App() {
     })
   }, [])
 
-  console.log(players)
-
   return (
     <div className="App">
+      <AudioPlayer />
       <img className='map' src={map} alt="map" />
       {timer < 100 ? <div className='timer'>{timer}</div> : <div className='timer'>99</div> }
-      {winner ? <h2 className='winner'>K.O!</h2> : null}
-      {victoryOrWalrus ? <h1 className='victory-or-walrus'><span className='victory'>VICTORY </span>OR<span className='walrus'> WALRUS</span></h1> : null} 
+      {winner ? <><h2 className='ko'>K.O!</h2><h2 className='winner'>{winner}</h2></>: null}
+      {victoryOrWalrus ? <><h1 className='victory-or-walrus'><span className='victory'>VICTORY </span>OR<span className='walrus'> WALRUS</span></h1> <h1 className='fight'>FIGHT!</h1> </> : null} 
       {players.map((player, i) => {
       return <Player key={"player" + i} player={player} index={i}  />
       })}
@@ -135,11 +134,16 @@ function App() {
 
 export default App;
 
-
-
 /*
 When winner is set
-run K.O ! for 2 seconds 
+run K.O ! for 2 seconds
+also run {winner}
 When thats done
 run ___ wins!
+set animation for 2 secs
+ko runs for 4
+victory or walrus runs for 2 seconds
+<winner ? <h2 className='victory-or-walrus'><span className='victory'>VICTORY </span>OR<span className='walrus'> WALRUS</span></h1>
+<h1 clasname="fight"></h1> : null
 */
+
