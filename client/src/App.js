@@ -5,9 +5,17 @@ import map from './assets/map.gif';
 import Player from "./Player"
 import AudioPlayer from './AudioPlayer';
 
+//const roomId = 'your_room_id';
 const socket = io('http://localhost:3001');
+//, {query: {roomId: roomId }}
 
 function App() {
+  const [players, setPlayers] = useState([]);
+  const [timer, setTimer] = useState(99)
+  const [victoryOrWalrus, setVictoryOrWalrus] = useState(null)
+  const [winner, setWinner] = useState("")
+  const keysPressed = useRef({});
+
   const [inputs, setInputs] = useState({
     ArrowUp: false,
     ArrowDown: false,
@@ -15,12 +23,6 @@ function App() {
     ArrowRight: false,
     Space: false,
   });
-
-  const [players, setPlayers] = useState([]);
-  const [timer, setTimer] = useState(99)
-  const [victoryOrWalrus, setVictoryOrWalrus] = useState(null)
-  const [winner, setWinner] = useState("")
-  const keysPressed = useRef({});
 
   useEffect(() => {
       const handleKeyDown = (e) => {
@@ -88,7 +90,7 @@ function App() {
   }, [players, victoryOrWalrus, winner])
 
   useEffect(() => {
-    socket.on('connect', () => {
+    socket.on('connect', (socket) => {
       console.log('Connected');
       });
   }, [])

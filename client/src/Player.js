@@ -3,7 +3,7 @@ import jumpin from './assets/jump.gif'
 import attack from './assets/attack.gif'
 import diving from './assets/diving.gif'
 
-const Player = ({index, player }) => {
+const Player = ({index, player}) => {
 
     const renderAnimationImg = (player) => {
         const attackImgWidth = 290; // width of attacking image
