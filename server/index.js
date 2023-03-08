@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-const TICK_RATE = 50;
+const TICK_RATE = 45;
 
 const server = http.createServer(app);
 const io = new Server(server, {
