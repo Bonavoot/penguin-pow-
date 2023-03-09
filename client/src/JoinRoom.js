@@ -1,22 +1,16 @@
 import { useState } from "react";
 
-const JoinRoom = ({onSubmit, onBack}) => {
+const JoinRoom = ({onBack}) => {
 const [roomId, setRoomId] = useState("")
 
-const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(roomId)
-}
+
 
 return (
-    <>
-    <form onSubmit={handleSubmit}>
-     <label htmlFor="room-id">ROOM ID:</label>
-     <input id="room-id" value={roomId} onChange={(e) => setRoomId(e.target.value)} type='text' />
-     <button type="submit" className="join-room-btn">JOIN ROOM</button>
-     </form>
+    <div className="create-room">
+     <input placeholder="ROOM NAME" className="create-room-input" value={roomId} onChange={(e) => setRoomId(e.target.value)} type='text' />
+     <button type="submit" className="create-room-btn">JOIN ROOM</button>
      <button className="back" onClick={onBack}>BACK</button>
-    </>
+    </div>
  )
 }
 

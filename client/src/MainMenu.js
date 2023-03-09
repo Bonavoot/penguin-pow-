@@ -3,6 +3,7 @@ import App from "./App";
 import CreateRoom from "./CreateRoom";
 import JoinRoom from "./JoinRoom";
 import io from 'socket.io-client'
+import map from './assets/map.gif'
 
 const socket = io('http://localhost:3001')
 
@@ -32,10 +33,11 @@ const [roomCode, setRoomCode] = useState("");
   switch (currentPage) {
     case "mainMenu":
       currentPageComponent = (
-        <div>
-          <h1>Welcome to My Game!</h1>
-          <button onClick={handleCreateRoom}>Create Room</button>
-          <button onClick={handleJoinRoom}>Join Room</button>
+        <div className="menu">
+          <button onClick={handleCreateRoom}>CREATE GAME</button>
+          <button onClick={handleJoinRoom}>JOIN GAME</button>
+          <button>SHOP</button>
+          <button>SETTINGS</button>
         </div>
       );
       break;
@@ -58,8 +60,10 @@ const [roomCode, setRoomCode] = useState("");
   }
 
   return (
-    <div>
-      {currentPageComponent}
+    <div className="main-menu">
+      <h1 className="logo">PENGUIN POW!</h1>
+      <img className='menu-map' src={map} alt="map" />
+      <div className="menu-options">{currentPageComponent}</div> 
     </div>
   );
 }
