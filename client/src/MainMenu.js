@@ -2,14 +2,14 @@ import { useState } from "react";
 import App from "./App";
 import CreateRoom from "./CreateRoom";
 import JoinRoom from "./JoinRoom";
-import io from 'socket.io-client'
-import map from './assets/map.gif'
+import io from "socket.io-client";
+import map from "./assets/map.gif";
 
-const socket = io('http://localhost:3001')
+const socket = io("http://localhost:3001");
 
 const MainMenu = () => {
-const [currentPage, setCurrentPage] = useState("mainMenu");
-const [roomCode, setRoomCode] = useState("");
+  const [currentPage, setCurrentPage] = useState("mainMenu");
+  const [roomCode, setRoomCode] = useState("");
 
   const handleCreateRoom = () => {
     setCurrentPage("createRoom");
@@ -21,7 +21,7 @@ const [roomCode, setRoomCode] = useState("");
 
   const handleJoinRoomSubmit = (code) => {
     setRoomCode(code);
-    socket.emit('joinRoom', roomCode)
+    socket.emit("joinRoom", roomCode);
     setCurrentPage("game");
   };
 
@@ -45,7 +45,9 @@ const [roomCode, setRoomCode] = useState("");
       currentPageComponent = <CreateRoom onBack={handleMainMenu} />;
       break;
     case "joinRoom":
-      currentPageComponent = <JoinRoom onSubmit={handleJoinRoomSubmit} onBack={handleMainMenu} />;
+      currentPageComponent = (
+        <JoinRoom onSubmit={handleJoinRoomSubmit} onBack={handleMainMenu} />
+      );
       break;
     case "game":
       currentPageComponent = <App roomCode={roomCode} />;
@@ -62,14 +64,10 @@ const [roomCode, setRoomCode] = useState("");
   return (
     <div className="main-menu">
       <h1 className="logo">PENGUIN POW!</h1>
-      <img className='menu-map' src={map} alt="map" />
-      <div className="menu-options">{currentPageComponent}</div> 
+      <img className="menu-map" src={map} alt="map" />
+      <div className="menu-options">{currentPageComponent}</div>
     </div>
   );
-}
+};
 
-export default MainMenu
-
-
-    
-      
+export default MainMenu;
